@@ -18,8 +18,7 @@ public class Statistics
 		int maxj = a[0].length;
 		double b[] = new double[maxi*maxj];
 		for (int i=0 ; i<maxi ; i++)
-			for (int j=0 ; j<maxj ; j++)
-				b[i*maxj+j] = a[i][j];
+            System.arraycopy(a[i], 0, b, i * maxj + 0, maxj);
 		return b;
 	}
 

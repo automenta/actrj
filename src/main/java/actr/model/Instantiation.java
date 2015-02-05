@@ -35,13 +35,10 @@ public class Instantiation
 	Instantiation copy ()
 	{
 		Instantiation newi = new Instantiation (p, time, u);
-		Iterator<Symbol> it = mapping.keySet().iterator();
-		while (it.hasNext())
-		{
-			Symbol variable = it.next();
-			Symbol chunk = get(variable);
-			newi.set (variable, chunk);
-		}
+        for (Symbol variable : mapping.keySet()) {
+            Symbol chunk = get(variable);
+            newi.set(variable, chunk);
+        }
 		return newi;
 	}
 
@@ -97,13 +94,10 @@ public class Instantiation
 
 	void replaceValue (Symbol value1, Symbol value2)
 	{
-		Iterator<Symbol> it = mapping.keySet().iterator();
-		while (it.hasNext())
-		{
-			Symbol variable = it.next();
-			Symbol chunk = get(variable);
-			if (chunk==value1) set (variable, value2);
-		}
+        for (Symbol variable : mapping.keySet()) {
+            Symbol chunk = get(variable);
+            if (chunk == value1) set(variable, value2);
+        }
 	}
 
 	/**
@@ -145,13 +139,10 @@ public class Instantiation
 	public String toString ()
 	{
 		String s = "<inst " + p.getName() + " ";
-		Iterator<Symbol> it = mapping.keySet().iterator();
-		while (it.hasNext())
-		{
-			Symbol v = it.next();
-			Symbol c = get(v);
-			s += " " + v + "->" + c;
-		}
+        for (Symbol v : mapping.keySet()) {
+            Symbol c = get(v);
+            s += " " + v + "->" + c;
+        }
 		return s+">";
 	}
 }

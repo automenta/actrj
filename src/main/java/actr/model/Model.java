@@ -353,7 +353,7 @@ public class Model
 		{
 			Event event = events.next();
 			if (realTime && (event.getTime() > time))
-				incrementalSleep ((long) Math.round(1000*(event.getTime() - time)
+				incrementalSleep (Math.round(1000*(event.getTime() - time)
 						* (1.0 / (realTimeMultiplier==0 ? 1 : realTimeMultiplier))));
 			time = event.getTime();
 

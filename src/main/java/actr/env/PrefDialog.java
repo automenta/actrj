@@ -111,7 +111,7 @@ class PrefDialog extends JDialog
 		fontSizeCB = new JComboBox (fontSizes);
 		fontSizeCB.addItemListener (new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				prefs.fontSize = Integer.valueOf ((String) fontSizeCB.getSelectedItem()).intValue();
+				prefs.fontSize = Integer.valueOf((String) fontSizeCB.getSelectedItem());
 				core.refreshEditors();
 			}
 		});
@@ -161,7 +161,7 @@ class PrefDialog extends JDialog
 		indentSpacesCB = new JComboBox (indentOptions);
 		indentSpacesCB.addItemListener (new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				prefs.indentSpaces = Integer.valueOf ((String) indentSpacesCB.getSelectedItem()).intValue();
+				prefs.indentSpaces = Integer.valueOf((String) indentSpacesCB.getSelectedItem());
 				core.refreshEditors();
 			}
 		});

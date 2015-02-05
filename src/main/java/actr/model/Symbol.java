@@ -334,7 +334,7 @@ public class Symbol
 	 */
 	public double toDouble ()
 	{
-		return Double.valueOf(string).doubleValue();
+		return Double.valueOf(string);
 	}
 
 	/**
@@ -358,12 +358,9 @@ public class Symbol
 	static void reset ()
 	{
 		hashmap = new HashMap<String,Symbol>();
-		Iterator<Symbol> it = pervasives.iterator();
-		while (it.hasNext())
-		{
-			Symbol sym = it.next();
-			hashmap.put (sym.string, sym);
-		}
+        for (Symbol sym : pervasives) {
+            hashmap.put(sym.string, sym);
+        }
 		unique = pervasives.size() + 1;
 	}
 

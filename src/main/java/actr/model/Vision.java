@@ -215,7 +215,7 @@ public class Vision extends Module
 
 	void setVisualFrequency (String string, double frequency)
 	{
-		frequencies.put (string, new Double(frequency));
+		frequencies.put (string, frequency);
 	}
 
 	private boolean matchesVisualObject (Chunk request, VisualObject vo)
@@ -263,8 +263,8 @@ public class Vision extends Module
 			if (slot==Symbol.screeny && !(Math.abs(vo.y-vi)<=visualMovementTolerance)) return false;
 
 			if (slot.getString().length() <= 8) continue;
-			if (slot==Symbol.get("-screen-x") && !(vo.x != vi)) return false;
-			if (slot==Symbol.get("-screen-y") && !(vo.y != vi)) return false;
+			if (slot==Symbol.get("-screen-x") && vo.x == vi) return false;
+			if (slot==Symbol.get("-screen-y") && vo.y == vi) return false;
 			if (slot==Symbol.get("<screen-x") && !(vo.x < vi)) return false;
 			if (slot==Symbol.get("<screen-y") && !(vo.y < vi)) return false;
 			if (slot==Symbol.get(">screen-x") && !(vo.x > vi)) return false;
@@ -344,16 +344,21 @@ public class Vision extends Module
 			{
 				VisualObject bestvo = null;
 				int best = 0;
-				Iterator<VisualObject> itVO = found.iterator();
-				while (itVO.hasNext())
-				{
-					VisualObject voTry = itVO.next();
-					int vovalue = (lohiSlot.getString().charAt(lohiSlot.getString().length()-1)=='x') ? voTry.x : voTry.y;
-					if (request.get(lohiSlot)==Symbol.lowest)
-					{ if (bestvo==null || vovalue < best) { bestvo=voTry; best=vovalue; } }
-					else // "highest"
-					{ if (bestvo==null || vovalue > best) { bestvo=voTry; best=vovalue; } }
-				}
+                for (VisualObject voTry : found) {
+                    int vovalue = (lohiSlot.getString().charAt(lohiSlot.getString().length() - 1) == 'x') ? voTry.x : voTry.y;
+                    if (request.get(lohiSlot) == Symbol.lowest) {
+                        if (bestvo == null || vovalue < best) {
+                            bestvo = voTry;
+                            best = vovalue;
+                        }
+                    } else // "highest"
+                    {
+                        if (bestvo == null || vovalue > best) {
+                            bestvo = voTry;
+                            best = vovalue;
+                        }
+                    }
+                }
 				request.set (lohiSlot, Symbol.get(best));
 				return findVisualLocation (request, found.iterator());
 			}
@@ -376,15 +381,15 @@ public class Vision extends Module
 			double nearestY = vislocChunk.get(Symbol.screeny).toDouble();
 			VisualObject bestvo = null;
 			double best = 99999;
-			Iterator<VisualObject> itVO = found.iterator();
-			while (itVO.hasNext())
-			{
-				VisualObject voTry = itVO.next();
-				double dx = voTry.x - nearestX;
-				double dy = voTry.y - nearestY;
-				double dist = Math.sqrt (dx*dx + dy*dy);
-				if (bestvo==null || dist < best) { bestvo=voTry; best=dist; }
-			}
+            for (VisualObject voTry : found) {
+                double dx = voTry.x - nearestX;
+                double dy = voTry.y - nearestY;
+                double dist = Math.sqrt(dx * dx + dy * dy);
+                if (bestvo == null || dist < best) {
+                    bestvo = voTry;
+                    best = dist;
+                }
+            }
 			return createVisLocChunk (bestvo);
 		}
 	}
@@ -407,7 +412,7 @@ public class Vision extends Module
 	private double computeEncodingTime (VisualObject vo)
 	{
 		Double freqdouble = frequencies.get(vo.value.getString());
-		double frequency = (freqdouble!=null) ? freqdouble.doubleValue() : emmaDefaultFrequency;
+		double frequency = (freqdouble!=null) ? freqdouble : emmaDefaultFrequency;
 		double t_enc = (emmaEncodingTimeFactor
 				* (- Math.log (frequency))
 				* Math.exp (emmaEncodingExponentFactor * computeEccentricity(vo)));
@@ -548,9 +553,7 @@ public class Vision extends Module
 	public String visualObjects ()
 	{
 		String s = "";
-		Iterator<VisualObject> it = visicon.values().iterator();
-		while (it.hasNext())
-			s += it.next() + "\n";
+        for (VisualObject visualObject : visicon.values()) s += visualObject + "\n";
 		return s;
 	}
 }

@@ -53,12 +53,9 @@ public class Chunk
 	Chunk copy ()
 	{
 		Chunk c2 = new Chunk (Symbol.getUnique(name.getString()), model);
-		Iterator<Symbol> it = slots.keySet().iterator();
-		while (it.hasNext())
-		{
-			Symbol slot = it.next();
-			c2.set (slot, get(slot));
-		}
+        for (Symbol slot : slots.keySet()) {
+            c2.set(slot, get(slot));
+        }
 		//c2.creationTime = creationTime;
 		//c2.request = request;
 		//c2.useCount = useCount;
@@ -169,7 +166,7 @@ public class Chunk
 		creationTime = time;
 		useCount = 1;
 		uses.clear();
-		uses.add (new Double (time));
+		uses.add (time);
 	}
 
 	void setBaseLevel (double baseLevel)
@@ -224,7 +221,7 @@ public class Chunk
 			double sum = 0;
 			for (int i=0 ; i<uses.size() ; i++)
 			{
-				double use = uses.elementAt(i).doubleValue();
+				double use = uses.elementAt(i);
 				sum += Math.pow (time - use, -model.getDeclarative().baseLevelDecayRate);
 			}
 			baseLevel = Math.log (sum);
@@ -235,16 +232,12 @@ public class Chunk
 	int appearsInSlotsOf (Chunk c2)
 	{
 		int count = 0;
-		Iterator<Symbol> it = c2.slots.keySet().iterator();
-		while (it.hasNext())
-		{
-			Symbol slot = it.next();
-			if (slot != Symbol.get("isa"))
-			{
-				Symbol value = c2.get (slot);
-				if (value == name) count++;
-			}
-		}
+        for (Symbol slot : c2.slots.keySet()) {
+            if (slot != Symbol.get("isa")) {
+                Symbol value = c2.get(slot);
+                if (value == name) count++;
+            }
+        }
 		return count;
 	}
 
@@ -287,14 +280,11 @@ public class Chunk
 	double computePartialMatch (Chunk request)
 	{
 		double sum = 0;
-		Iterator<Symbol> it = request.slots.keySet().iterator();
-		while (it.hasNext())
-		{
-			Symbol slot = it.next();
-			if (slot == Symbol.isa) continue;
-			Symbol value = request.get (slot);
-			sum += model.getDeclarative().getSimilarity (value, get(slot));
-		}
+        for (Symbol slot : request.slots.keySet()) {
+            if (slot == Symbol.isa) continue;
+            Symbol value = request.get(slot);
+            sum += model.getDeclarative().getSimilarity(value, get(slot));
+        }
 		return model.getDeclarative().mismatchPenalty * sum;
 	}
 
@@ -340,7 +330,7 @@ public class Chunk
 	void addUse ()
 	{
 		if (model.getDeclarative().optimizedLearning) useCount++;
-		else uses.add (new Double (model.getTime()));
+		else uses.add (model.getTime());
 	}
 
 	/** 
@@ -352,14 +342,11 @@ public class Chunk
 		String s = "(" + name;
 		Symbol isa = get (Symbol.isa);
 		if (isa!=null && isa!=Symbol.nil) s += " isa " + isa;
-		Iterator<Symbol> it = slots.keySet().iterator();
-		while (it.hasNext())
-		{
-			Symbol slot = it.next();
-			if (slot == Symbol.isa) continue;
-			Symbol value = slots.get (slot);
-			s += " " + slot + " " + value;
-		}
+        for (Symbol slot : slots.keySet()) {
+            if (slot == Symbol.isa) continue;
+            Symbol value = slots.get(slot);
+            s += " " + slot + " " + value;
+        }
 		return s + ")"; // + " [bl="+getBaseLevel()+"] [fan=" + fan + "]";
 	}
 }

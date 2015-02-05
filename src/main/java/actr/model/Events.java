@@ -67,43 +67,33 @@ public class Events
 	 */
 	public boolean scheduled (String module, String prefix)
 	{
-		Iterator<Event> it = events.iterator();
-		while (it.hasNext())
-		{
-			Event e = it.next();
-			if (e.module.equals(module) && e.description.startsWith(prefix))
-				return true;
-		}
+        for (Event e : events) {
+            if (e.module.equals(module) && e.description.startsWith(prefix))
+                return true;
+        }
 		return false;
 	}
 
 	void changeTime (String module, String prefix, double newTime)
 	{
-		Iterator<Event> it = events.iterator();
-		while (it.hasNext())
-		{
-			Event e = it.next();
-			if (e.module.equals(module) && e.description.startsWith(prefix))
-			{
-				events.remove (e);
-				e.time = newTime;
-				// remove and add to re-sort the events
-				events.add (e);
-				return;
-			}
-		}
+        for (Event e : events) {
+            if (e.module.equals(module) && e.description.startsWith(prefix)) {
+                events.remove(e);
+                e.time = newTime;
+                // remove and add to re-sort the events
+                events.add(e);
+                return;
+            }
+        }
 	}
 
 	void removeModuleEvents (String module, String prefix)
 	{
 		Set<Event> moduleEvents = new HashSet<Event>();
-		Iterator<Event> it = events.iterator();
-		while (it.hasNext())
-		{
-			Event e = it.next();
-			if (e.module.equals(module) && e.description.startsWith(prefix))
-				moduleEvents.add (e);
-		}
+        for (Event e : events) {
+            if (e.module.equals(module) && e.description.startsWith(prefix))
+                moduleEvents.add(e);
+        }
 		events.removeAll (moduleEvents);
 	}
 
@@ -119,9 +109,7 @@ public class Events
 	public String toString ()
 	{
 		String s = "Events:\n";
-		Iterator<Event> it = events.iterator();
-		while (it.hasNext())
-			s += it.next() + "\n";
+        for (Event event : events) s += event + "\n";
 		return s + "\n";
 	}
 }

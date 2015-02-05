@@ -172,7 +172,7 @@ public class Frame extends JFrame
 	String getShortName ()
 	{
 		String name = getFileName();
-		if (name.indexOf(".actr") >= 0) name = name.substring (0, name.indexOf(".actr"));
+		if (name.contains(".actr")) name = name.substring (0, name.indexOf(".actr"));
 		return name;
 	}
 
@@ -239,8 +239,8 @@ public class Frame extends JFrame
 	 */
 	public void open (URL url)
 	{
-		this.file = new File (url.getPath());;
-		editor.open (url);
+		this.file = new File (url.getPath());
+        editor.open (url);
 		editor.grabFocus();
 		model = null;
 		update();
@@ -335,8 +335,8 @@ public class Frame extends JFrame
 				core.releaseLock (frame);
 				update();
 				return null;
-			};
-		}).execute();
+			}
+        }).execute();
 	}
 
 	void runBatch (final boolean output)

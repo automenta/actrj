@@ -65,12 +65,9 @@ public class Procedural extends Module
 
 	Production exists (Production p)
 	{
-		Iterator<Production> it = productions.values().iterator();
-		while (it.hasNext())
-		{
-			Production ip = it.next();
-			if (ip.equals(p)) return ip;
-		}
+        for (Production ip : productions.values()) {
+            if (ip.equals(p)) return ip;
+        }
 		return null;
 	}
 
@@ -90,13 +87,10 @@ public class Procedural extends Module
 
 		if (buffers.numGoals() == 0)
 		{
-			Iterator<Production> it = productions.values().iterator();
-			while (it.hasNext())
-			{
-				Production p = it.next();
-				Instantiation inst = p.instantiate (buffers);
-				if (inst != null) set.add (inst);
-			}
+            for (Production p : productions.values()) {
+                Instantiation inst = p.instantiate(buffers);
+                if (inst != null) set.add(inst);
+            }
 		}
 		else
 		{
@@ -105,13 +99,10 @@ public class Procedural extends Module
 				buffers.tryGoal (i);
 				if (threadedCognitionTrace)
 					model.output ("*** (tct) trying goal " + buffers.get(Symbol.goal));
-				Iterator<Production> it = productions.values().iterator();
-				while (it.hasNext())
-				{
-					Production p = it.next();
-					Instantiation inst = p.instantiate (buffers);
-					if (inst != null) set.add (inst);
-				}
+                for (Production p : productions.values()) {
+                    Instantiation inst = p.instantiate(buffers);
+                    if (inst != null) set.add(inst);
+                }
 			}
 		}
 
@@ -172,7 +163,7 @@ public class Procedural extends Module
 		if (productionLearning)
 		{
 			Instantiation lastFired = (!productionCompilationThreaded) ? lastFiredInst :
-				lastFiredOnThread.get (new Integer(inst.getThreadID()));
+				lastFiredOnThread.get (inst.getThreadID());
 
 			if (lastFired!=null &&
 					inst.getTime() - lastFired.getTime() > model.getProcedural().productionCompilationThresholdTime)
@@ -232,7 +223,7 @@ public class Procedural extends Module
 		}
 
 		lastFiredInst = inst;
-		lastFiredOnThread.put (new Integer(inst.getThreadID()), inst);
+		lastFiredOnThread.put (inst.getThreadID(), inst);
 
 		if (utilityLearning)
 		{
@@ -266,8 +257,7 @@ public class Procedural extends Module
 	public String toString ()
 	{
 		String s = "";
-		Iterator<Production> it = productions.values().iterator();
-		while (it.hasNext()) s += it.next() + "\n";
+        for (Production production : productions.values()) s += production + "\n";
 		return s;
 	}
 }

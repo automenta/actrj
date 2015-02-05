@@ -61,26 +61,19 @@ public class Declarative extends Module
 
 		if (!preventMerge)
 		{
-			Iterator<Chunk> it = chunks.values().iterator();
-			while (it.hasNext())
-			{
-				Chunk existingChunk = it.next();
-				if (chunk.equals (existingChunk))
-				{
-					existingChunk.addUse();
-					model.getBuffers().replaceSlotValues (chunk, existingChunk);
-					return existingChunk;
-				}
-			}
+            for (Chunk existingChunk : chunks.values()) {
+                if (chunk.equals(existingChunk)) {
+                    existingChunk.addUse();
+                    model.getBuffers().replaceSlotValues(chunk, existingChunk);
+                    return existingChunk;
+                }
+            }
 		}
 
 		chunk.setFan (1);
-		Iterator<Chunk> it = chunks.values().iterator();
-		while (it.hasNext())
-		{
-			Chunk existingChunk = it.next();
-			chunk.increaseFan (chunk.appearsInSlotsOf (existingChunk));
-		}
+        for (Chunk existingChunk : chunks.values()) {
+            chunk.increaseFan(chunk.appearsInSlotsOf(existingChunk));
+        }
 
 		Iterator<Symbol> it2 = chunk.getSlotValues();
 		while (it2.hasNext())
@@ -118,32 +111,30 @@ public class Declarative extends Module
 		HashSet<Chunk> matches = new HashSet<Chunk>();
 		if (activationTrace) model.output ("*** finding retrieval for request " + request);
 
-		Iterator<Chunk> it = chunks.values().iterator();
-		while (it.hasNext())
-		{
-			Chunk potential = it.next();
-			boolean match = true;
-			Iterator<Symbol> slots = request.getSlotNames();
-			while (slots.hasNext())
-			{
-				Symbol slot = slots.next();
-				Symbol value = request.get(slot);
-				if (slot==Symbol.recentlyRetrieved)
-				{
-					if (value==Symbol.get("reset")) finsts.clear();
-					else if (potential.isRetrieved() != value.toBoolean()) { match=false; continue; }
-				}
-				else
-				{
-					Symbol potval = potential.get(slot);
-					if (!partialMatching
-							|| (slot==Symbol.isa || slot.getString().charAt(0)==':'))
-						if (potval==null || potval!=request.get(slot))
-						{ match=false; continue; }
-				}
-			}
-			if (match) matches.add (potential);
-		}
+        for (Chunk potential : chunks.values()) {
+            boolean match = true;
+            Iterator<Symbol> slots = request.getSlotNames();
+            while (slots.hasNext()) {
+                Symbol slot = slots.next();
+                Symbol value = request.get(slot);
+                if (slot == Symbol.recentlyRetrieved) {
+                    if (value == Symbol.get("reset")) finsts.clear();
+                    else if (potential.isRetrieved() != value.toBoolean()) {
+                        match = false;
+                        continue;
+                    }
+                } else {
+                    Symbol potval = potential.get(slot);
+                    if (!partialMatching
+                            || (slot == Symbol.isa || slot.getString().charAt(0) == ':'))
+                        if (potval == null || potval != request.get(slot)) {
+                            match = false;
+                            continue;
+                        }
+                }
+            }
+            if (match) matches.add(potential);
+        }
 
 		if (matches.isEmpty())
 		{
@@ -164,7 +155,7 @@ public class Declarative extends Module
 		}
 		else
 		{
-			it = matches.iterator();
+            Iterator<Chunk> it = matches.iterator();
 			Chunk chunk = it.next();
 			if (activationTrace) model.output ("*** testing " +chunk.getName() + " " +chunk);
 			double highestActivation = chunk.computeActivation (request);
@@ -296,18 +287,17 @@ public class Declarative extends Module
 		Double d = similarities.get (chunk1.getString()+"$"+chunk2.getString());
 		if (d==null) d = similarities.get (chunk2.getString()+"$"+chunk1.getString());
 		if (d==null) return -1.0;
-		else return d.doubleValue();
+		else return d;
 	}
 
 	void setSimilarity (Symbol chunk1, Symbol chunk2, double value)
 	{
-		similarities.put (chunk1.getString()+"$"+chunk2.getString(), new Double(value));
+		similarities.put (chunk1.getString()+"$"+chunk2.getString(), value);
 	}
 
 	void setAllBaseLevels (double baseLevel)
 	{
-		Iterator<Chunk> it = chunks.values().iterator();
-		while (it.hasNext()) it.next().setBaseLevel(baseLevel);
+        for (Chunk chunk : chunks.values()) chunk.setBaseLevel(baseLevel);
 	}
 
 	/** 
@@ -326,8 +316,7 @@ public class Declarative extends Module
 	public String toString ()
 	{
 		String s = "";
-		Iterator<Chunk> it = chunks.values().iterator();
-		while (it.hasNext()) s += it.next() + "\n";
+        for (Chunk chunk : chunks.values()) s += chunk + "\n";
 		return s;
 	}
 }

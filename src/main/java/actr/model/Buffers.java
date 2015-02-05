@@ -78,12 +78,9 @@ public class Buffers
 	 */
 	public Chunk getBufferChunk (Symbol name)
 	{
-		Iterator<Chunk> it = buffers.values().iterator();
-		while (it.hasNext())
-		{
-			Chunk chunk = it.next();
-			if (chunk.getName() == name) return chunk;
-		}
+        for (Chunk chunk : buffers.values()) {
+            if (chunk.getName() == name) return chunk;
+        }
 		return null;
 	}
 
@@ -155,7 +152,7 @@ public class Buffers
 
 	void touch (Symbol buffer)
 	{
-		touchTimes.put (buffer, new Double (model.getTime()));
+		touchTimes.put (buffer, model.getTime());
 	}
 
 	void removeDecayedChunks ()
@@ -168,7 +165,7 @@ public class Buffers
 			if (buffer == Symbol.retrieval)
 			{
 				Double ttd = touchTimes.get(buffer);
-				double tt = (ttd==null) ? 0 : ttd.doubleValue();
+				double tt = (ttd==null) ? 0 : ttd;
 				if (tt + bufferChunkLife < model.getTime())
 				{
 					if (model.verboseTrace) model.output ("buffers", buffer+" cleared (buffer decay)");
@@ -207,19 +204,15 @@ public class Buffers
 
 	void replaceSlotValues (Chunk c1, Chunk c2)
 	{
-		Iterator<Symbol> it = buffers.keySet().iterator();
-		while (it.hasNext())
-		{
-			Symbol buffer = it.next();
-			Chunk chunk = get (buffer);
-			Iterator<Symbol> slots = chunk.getSlotNames();
-			while (slots.hasNext())
-			{
-				Symbol slot = slots.next();
-				Symbol value = chunk.get (slot);
-				if (value == c1.getName()) chunk.set (slot, c2.getName());
-			}
-		}
+        for (Symbol buffer : buffers.keySet()) {
+            Chunk chunk = get(buffer);
+            Iterator<Symbol> slots = chunk.getSlotNames();
+            while (slots.hasNext()) {
+                Symbol slot = slots.next();
+                Symbol value = chunk.get(slot);
+                if (value == c1.getName()) chunk.set(slot, c2.getName());
+            }
+        }
 	}
 
 	/** 

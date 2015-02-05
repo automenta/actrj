@@ -4,6 +4,7 @@ import actr.Main;
 
 import java.awt.*;
 import java.io.*;
+import java.util.Collections;
 import java.util.Vector;
 
 class Preferences
@@ -87,8 +88,7 @@ class Preferences
 				else if (var.equals("recentFiles"))
 				{
 					String paths[] = val.split(",");
-					for (int j=0 ; j<paths.length ; j++)
-						prefs.recentFiles.add (paths[j]);
+                    Collections.addAll(prefs.recentFiles, paths);
 				}
 
 			}
